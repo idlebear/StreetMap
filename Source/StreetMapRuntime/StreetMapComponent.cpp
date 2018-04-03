@@ -19,7 +19,6 @@
 UStreetMapComponent::UStreetMapComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer),
 	  StreetMap(nullptr),
-	  CachedLocalBounds(ForceInit)
 {
 	// We make sure our mesh collision profile name is set to NoCollisionProfileName at initialization. 
 	// Because we don't have collision data yet!
@@ -170,9 +169,7 @@ void UStreetMapComponent::GenerateCollision()
 	}
 
 	// Rebuild the body setup
-#if WITH_EDITOR || WITH_RUNTIME_PHYSICS_COOKING
 	StreetMapBodySetup->InvalidatePhysicsData();
-#endif
 	StreetMapBodySetup->CreatePhysicsMeshes();
 
 	UpdateNavigationIfNeeded();
@@ -235,7 +232,6 @@ void UStreetMapComponent::GenerateMesh()
 	/////////////////////////////////////////////////////////
 
 
-	CachedLocalBounds = FBox( ForceInit );
 	Vertices.Reset();
 	Indices.Reset();
 
@@ -308,7 +304,6 @@ void UStreetMapComponent::GenerateMesh()
 
 				// calculate fill Z for buildings
 				// either use the defined height or extrapolate from building level count
-				float BuildingFillZ = 0.0f;
 				if (bWant3DBuildings) {
 					if (Building.Height > 0) {
 						BuildingFillZ = Building.Height;
@@ -328,7 +323,6 @@ void UStreetMapComponent::GenerateMesh()
 					AddTriangles( TempPoints, TriangulatedVertexIndices, FVector::ForwardVector, FVector::UpVector, BuildingFillColor, MeshBoundingBox );
 				}
 
-				if( bWant3DBuildings && (Building.Height > KINDA_SMALL_NUMBER || Building.BuildingLevels > 0) )
 				{
 					// NOTE: Lit buildings can't share vertices beyond quads (all quads have their own face normals), so this uses a lot more geometry!
 					if( bWantLitBuildings )
@@ -527,7 +521,6 @@ void UStreetMapComponent::InvalidateMesh()
 {
 	Vertices.Reset();
 	Indices.Reset();
-	CachedLocalBounds = FBoxSphereBounds(FBox(ForceInit));
 	ClearCollision();
 	// Mark our render state dirty so that CreateSceneProxy can refresh it on demand
 	MarkRenderStateDirty();
