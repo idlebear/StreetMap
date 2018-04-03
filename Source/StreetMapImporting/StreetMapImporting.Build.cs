@@ -2,5 +2,40 @@
 
 namespace UnrealBuildTool.Rules
 {
+    public StreetMapImporting(ReadOnlyTargetRules Target) : base(Target)
     {
+        PrivateDependencyModuleNames.AddRange(
+            new string[] {
+                "Core",
+                "CoreUObject",
+                "Engine",
+                "UnrealEd",
+                "XmlParser",
+                "AssetTools",
+                "Projects",
+                "Slate",
+                "EditorStyle",
+                "SlateCore",
+                "PropertyEditor",
+                "RenderCore",
+                "ShaderCore",
+                "RHI",
+                "RawMesh",
+                "AssetTools",
+                "AssetRegistry",
+                "StreetMapRuntime",
+                "HTTP",
+                "ImageWrapper",
+                "DesktopPlatform",
+                "Landscape",
+                "CinematicCamera"
+            }
+        );
+
+        PrivateIncludePaths.AddRange(
+            new string[] {
+                "Developer/DesktopPlatform/Public",
+            }
+        );
     }
+}
